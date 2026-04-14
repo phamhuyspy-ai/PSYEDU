@@ -70,7 +70,7 @@ const DEFAULT_SETTINGS: SystemSettings = {
   SOCIAL_FACEBOOK: '',
   SOCIAL_TIKTOK: '',
   
-  GAS_WEB_APP_URL: 'https://script.google.com/macros/s/AKfycbxEzPiN7CYxJJbbbx3Yx90r2KQ-YOxNyw4ycTB8nSo/dev',
+  GAS_WEB_APP_URL: 'https://script.google.com/macros/s/AKfycbxAifc1lwuyovelULQ5t9nkUxKojPbUTtzJ78wtlfFJWhBUjHimW4xSHVb0tvWa88ITBQ/exec',
   GOOGLE_SHEET_ID: '1Jx6tf1eYRjJKImHFMeLOXUjHR7S8EVeU4uICNgHu0kLjHAuZ8KgnREUa',
   DRIVE_FOLDER_ID: '1A_...',
   
