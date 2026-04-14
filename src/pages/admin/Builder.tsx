@@ -153,7 +153,7 @@ export default function Builder() {
           {/* Config Panel - absolute on mobile, static on desktop */}
           <div className={`
             absolute inset-y-0 right-0 z-20 transform transition-transform duration-300 ease-in-out
-            lg:relative lg:transform-none lg:z-0
+            lg:relative lg:transform-none lg:z-0 h-full
             ${activeBlockId ? 'translate-x-0' : 'translate-x-full lg:hidden'}
           `}>
             <ConfigPanel />

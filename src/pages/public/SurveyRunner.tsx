@@ -139,11 +139,17 @@ export default function SurveyRunner() {
 
       // 2. Chuẩn bị dữ liệu để gửi lên GAS
       const submissionId = `sub_${Math.random().toString(36).substr(2, 9)}`;
+      
+      // Chuẩn bị kết quả để gửi email (nếu cần)
+      const resultMessage = totalScore >= 80 ? 'Tốt' : totalScore >= 50 ? 'Trung bình' : 'Cần chú ý';
+      
       const payload = {
         action: 'submit_data',
         form_id: formId,
         form_code: activeForm.code,
         sheet_name: activeForm.code,
+        email: contactInfo.email, // Truyền email ra ngoài payload để GAS dễ lấy
+        send_email: settings.send_result_email, // Cờ yêu cầu gửi email tự động
         data: {
           submission_id: submissionId,
           timestamp: new Date().toISOString(),
@@ -166,6 +172,8 @@ export default function SurveyRunner() {
             return acc;
           }, {} as Record<string, any>),
           total_score: totalScore,
+          form_title: activeForm.title, // Thêm title để GAS gửi email
+          result_message: resultMessage // Thêm message để GAS gửi email
         }
       };
 
@@ -201,8 +209,8 @@ export default function SurveyRunner() {
     )}>
       {/* Header */}
       {!isEmbed && (
-        <header className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 py-4 px-6 sticky top-0 z-10">
-          <div className="max-w-2xl mx-auto flex items-center justify-between">
+        <header className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 py-4 px-4 sm:px-6 md:px-8 sticky top-0 z-10">
+          <div className="max-w-4xl mx-auto flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold">P</div>
               <h1 className="font-semibold text-gray-900 dark:text-white truncate max-w-[200px] sm:max-w-md">
@@ -229,8 +237,8 @@ export default function SurveyRunner() {
       </div>
 
       {/* Main Content */}
-      <main className="flex-1 flex items-center justify-center p-4 sm:p-8 relative">
-        <div className="w-full max-w-2xl">
+      <main className="flex-1 flex items-center justify-center p-4 sm:p-6 md:p-8 relative">
+        <div className="w-full max-w-4xl">
           <AnimatePresence mode="wait">
             {showEncouragement ? (
               <motion.div

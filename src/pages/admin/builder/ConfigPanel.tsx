@@ -81,7 +81,7 @@ export default function ConfigPanel() {
 
   if (!activeBlock) {
     return (
-      <div className="w-80 bg-white border-l border-gray-200 flex flex-col shrink-0">
+      <div className="w-80 bg-white border-l border-gray-200 flex flex-col shrink-0 h-full">
         <div className="p-4 border-b border-gray-200 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Settings2 size={18} className="text-gray-500" />
@@ -160,7 +160,7 @@ export default function ConfigPanel() {
   }
 
   return (
-    <div className="w-80 bg-white border-l border-gray-200 flex flex-col shrink-0">
+    <div className="w-80 bg-white border-l border-gray-200 flex flex-col shrink-0 h-full">
       <div className="p-4 border-b border-gray-200 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Settings2 size={18} className="text-gray-500" />
