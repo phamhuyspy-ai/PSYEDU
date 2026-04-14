@@ -50,6 +50,7 @@ export interface SystemSettings {
   AI_EXPERT_NAME: string;
   AI_SYSTEM_PROMPT: string;
   AI_KNOWLEDGE_BASE: string;
+  FOOTER_LINKS: { label: string, url: string }[];
 }
 
 interface SettingsState {
@@ -99,6 +100,11 @@ const DEFAULT_SETTINGS: SystemSettings = {
   AI_EXPERT_NAME: 'Chuyên gia Psyedu',
   AI_SYSTEM_PROMPT: 'Bạn là một chuyên gia tâm lý học giáo dục hàng đầu từ Viện Tâm lý Giáo dục PSYEDU. Nhiệm vụ của bạn là lắng nghe, thấu hiểu và đưa ra những lời khuyên chuyên môn, trấn an và định hướng cho người dùng dựa trên kết quả khảo sát của họ hoặc các vấn đề họ đang gặp phải. Hãy luôn giữ thái độ chuyên nghiệp, ấm áp và đồng cảm.',
   AI_KNOWLEDGE_BASE: '',
+  FOOTER_LINKS: [
+    { label: 'Về chúng tôi', url: '#' },
+    { label: 'Chính sách bảo mật', url: '#' },
+    { label: 'Điều khoản sử dụng', url: '#' }
+  ],
 };
 
 export const useSettingsStore = create<SettingsState>()(

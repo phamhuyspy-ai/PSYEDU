@@ -168,9 +168,9 @@ export default function PublicPortal() {
             <div className="space-y-4">
               <h4 className="font-bold text-gray-900 dark:text-white">Liên kết</h4>
               <ul className="space-y-2 text-sm text-gray-500 dark:text-gray-400">
-                <li><a href="#" className="hover:text-blue-600">Về chúng tôi</a></li>
-                <li><a href="#" className="hover:text-blue-600">Chính sách bảo mật</a></li>
-                <li><a href="#" className="hover:text-blue-600">Điều khoản sử dụng</a></li>
+                {(settings.FOOTER_LINKS || []).map((link, index) => (
+                  <li key={index}><a href={link.url} className="hover:text-blue-600">{link.label}</a></li>
+                ))}
               </ul>
             </div>
             <div className="space-y-4">
