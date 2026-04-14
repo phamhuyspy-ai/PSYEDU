@@ -66,8 +66,8 @@ export default function FormList() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Danh sách bảng hỏi</h1>
-          <p className="text-sm text-gray-500 mt-1">Quản lý tất cả các bảng hỏi và biểu mẫu của bạn</p>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Danh sách bảng hỏi</h1>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Quản lý tất cả các bảng hỏi và biểu mẫu của bạn</p>
         </div>
         <button 
           onClick={() => setIsModalOpen(true)}
@@ -79,21 +79,21 @@ export default function FormList() {
       </div>
 
       {/* Filters */}
-      <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col sm:flex-row gap-4">
+      <div className="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 flex flex-col sm:flex-row gap-4">
         <div className="relative flex-1">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <Search className="h-5 w-5 text-gray-400" />
+            <Search className="h-5 w-5 text-gray-400 dark:text-gray-500" />
           </div>
           <input
             type="text"
             placeholder="Tìm kiếm theo tên hoặc mã..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+            className="block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md leading-5 bg-white dark:bg-gray-900 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 sm:text-sm text-gray-900 dark:text-white"
           />
         </div>
         <div className="flex items-center gap-2">
-          <button className="inline-flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-md bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
+          <button className="inline-flex items-center gap-2 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">
             <Filter size={16} />
             Lọc trạng thái
           </button>
@@ -101,10 +101,10 @@ export default function FormList() {
       </div>
 
       {/* List */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm text-gray-600">
-            <thead className="bg-gray-50 text-gray-700 font-medium border-b border-gray-100">
+          <table className="w-full text-left text-sm text-gray-600 dark:text-gray-400">
+            <thead className="bg-gray-50 dark:bg-gray-900/50 text-gray-700 dark:text-gray-300 font-medium border-b border-gray-100 dark:border-gray-700">
               <tr>
                 <th className="px-6 py-4">Thông tin bảng hỏi</th>
                 <th className="px-6 py-4">Trạng thái</th>

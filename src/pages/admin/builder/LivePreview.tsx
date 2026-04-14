@@ -7,40 +7,40 @@ export default function LivePreview() {
   if (!form) return null;
 
   return (
-    <div className="flex-1 flex flex-col bg-white border-l border-gray-300 overflow-hidden">
-      <div className="p-3 border-b border-gray-200 bg-gray-50 flex items-center justify-between shrink-0">
-        <h3 className="text-sm font-semibold text-gray-700">Bản xem trước (Live Preview)</h3>
-        <span className="text-xs text-gray-500">Giao diện người dùng</span>
+    <div className="flex-1 flex flex-col bg-white dark:bg-gray-800 border-l border-gray-300 dark:border-gray-700 overflow-hidden transition-colors">
+      <div className="p-3 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 flex items-center justify-between shrink-0">
+        <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">Bản xem trước (Live Preview)</h3>
+        <span className="text-xs text-gray-500 dark:text-gray-400">Giao diện người dùng</span>
       </div>
       
-      <div className="flex-1 overflow-y-auto p-6 bg-gray-100">
-        <div className="max-w-md mx-auto bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+      <div className="flex-1 overflow-y-auto p-6 bg-gray-100 dark:bg-gray-950">
+        <div className="max-w-md mx-auto bg-white dark:bg-gray-900 rounded-lg shadow-sm border border-gray-200 dark:border-gray-800 overflow-hidden">
           {/* Form Header */}
-          <div className="p-6 border-b border-gray-200 bg-blue-50">
-            <h1 className="text-2xl font-bold text-gray-900 mb-2">{form.title}</h1>
+          <div className="p-6 border-b border-gray-200 dark:border-gray-800 bg-blue-50 dark:bg-blue-900/20">
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">{form.title}</h1>
             {form.description && (
-              <p className="text-sm text-gray-600 whitespace-pre-wrap">{form.description}</p>
+              <p className="text-sm text-gray-600 dark:text-gray-400 whitespace-pre-wrap">{form.description}</p>
             )}
           </div>
 
           {/* Form Blocks */}
           <div className="p-6 space-y-8">
             {blocks.length === 0 ? (
-              <div className="text-center text-gray-400 py-8 text-sm">
+              <div className="text-center text-gray-400 dark:text-gray-500 py-8 text-sm">
                 Chưa có câu hỏi nào.
               </div>
             ) : (
               blocks.map((block, index) => (
                 <div key={block.id} className="space-y-3">
                   <div className="flex gap-2">
-                    <span className="font-medium text-gray-900">{index + 1}.</span>
+                    <span className="font-medium text-gray-900 dark:text-white">{index + 1}.</span>
                     <div className="flex-1">
-                      <h3 className="font-medium text-gray-900">
+                      <h3 className="font-medium text-gray-900 dark:text-white">
                         {block.title}
                         {block.required && <span className="text-red-500 ml-1">*</span>}
                       </h3>
                       {block.description && (
-                        <p className="text-sm text-gray-500 mt-1">{block.description}</p>
+                        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{block.description}</p>
                       )}
                     </div>
                   </div>

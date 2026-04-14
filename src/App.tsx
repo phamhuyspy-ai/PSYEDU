@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
 import AdminLayout from './layouts/AdminLayout';
 import Login from './pages/admin/Login';
 import Dashboard from './pages/admin/Dashboard';
@@ -34,7 +34,7 @@ export default function App() {
 
   return (
     <div className={theme}>
-      <BrowserRouter>
+      <HashRouter>
         <Routes>
         {/* Public Routes */}
         <Route path="/" element={<PublicPortal />} />
@@ -61,7 +61,7 @@ export default function App() {
         </Route>
       </Routes>
       <ChatWidget />
-    </BrowserRouter>
+    </HashRouter>
   </div>
 );
 }

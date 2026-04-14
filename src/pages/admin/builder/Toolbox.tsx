@@ -46,17 +46,17 @@ export default function Toolbox() {
   };
 
   return (
-    <div className="w-64 bg-white border-r border-gray-200 flex flex-col shrink-0">
-      <div className="p-4 border-b border-gray-200">
-        <h2 className="font-semibold text-gray-900">Công cụ</h2>
-        <p className="text-xs text-gray-500 mt-1">Nhấn để thêm vào biểu mẫu</p>
+    <div className="w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 flex flex-col shrink-0 transition-colors">
+      <div className="p-4 border-b border-gray-200 dark:border-gray-700">
+        <h2 className="font-semibold text-gray-900 dark:text-white">Công cụ</h2>
+        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Nhấn để thêm vào biểu mẫu</p>
       </div>
       <div className="p-3 overflow-y-auto flex-1 space-y-2">
         {tools.map((tool) => (
           <button
             key={tool.type}
             onClick={() => handleAddBlock(tool.type as BlockType)}
-            className="w-full flex items-center gap-3 p-3 text-sm text-gray-700 bg-gray-50 hover:bg-blue-50 hover:text-blue-700 border border-transparent hover:border-blue-200 rounded-lg transition-colors text-left"
+            className="w-full flex items-center gap-3 p-3 text-sm text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-900/50 hover:bg-blue-50 dark:hover:bg-blue-900/30 hover:text-blue-700 dark:hover:text-blue-400 border border-transparent hover:border-blue-200 dark:hover:border-blue-800 rounded-lg transition-colors text-left"
           >
             <tool.icon size={18} className="text-gray-500" />
             <span className="font-medium">{tool.label}</span>

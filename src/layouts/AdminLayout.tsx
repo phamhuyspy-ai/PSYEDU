@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Outlet, NavLink, useNavigate } from 'react-router-dom';
+import { Outlet, NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
 import { useAppStore } from '../store/appStore';
 import { translations } from '../lib/translations';
@@ -15,6 +15,8 @@ import {
   X,
   User as UserIcon,
   ChevronDown,
+  ChevronLeft,
+  ChevronRight,
   Key
 } from 'lucide-react';
 import { cn } from '../lib/utils';
@@ -26,9 +28,18 @@ export default function AdminLayout() {
   const { theme, language } = useAppStore();
   const t = translations[language];
   const navigate = useNavigate();
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const location = useLocation();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // For mobile
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false); // For desktop
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false);
+
+  // Auto-collapse sidebar when in builder mode
+  React.useEffect(() => {
+    if (location.pathname.includes('/admin/builder/')) {
+      setIsSidebarCollapsed(true);
+    }
+  }, [location.pathname]);
 
   const handleLogout = () => {
     logout();
@@ -140,32 +151,46 @@ export default function AdminLayout() {
 
         {/* Sidebar */}
         <aside className={cn(
-          "fixed lg:static inset-y-0 left-0 z-10 w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 transform transition-transform duration-200 ease-in-out lg:transform-none flex flex-col pt-16 lg:pt-0",
-          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+          "fixed lg:static inset-y-0 left-0 z-10 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 transform transition-all duration-300 ease-in-out flex flex-col pt-16 lg:pt-0",
+          isSidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0",
+          isSidebarCollapsed ? "w-16" : "w-64"
         )}>
-          <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+          <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto overflow-x-hidden">
             {navItems.map((item) => (
               <NavLink
                 key={item.to}
                 to={item.to}
                 end={item.end}
                 onClick={() => setIsSidebarOpen(false)}
+                title={isSidebarCollapsed ? item.label : undefined}
                 className={({ isActive }) => cn(
-                  "flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium transition-colors",
+                  "flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium transition-colors whitespace-nowrap",
                   isActive 
                     ? "bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400" 
-                    : "text-gray-700 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white"
+                    : "text-gray-700 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white",
+                  isSidebarCollapsed && "justify-center px-0"
                 )}
               >
-                <item.icon size={18} className={cn("flex-shrink-0")} />
-                {item.label}
+                <item.icon size={18} className="flex-shrink-0" />
+                {!isSidebarCollapsed && <span>{item.label}</span>}
               </NavLink>
             ))}
           </nav>
+          
+          {/* Collapse Toggle Button (Desktop Only) */}
+          <div className="hidden lg:flex p-3 border-t border-gray-200 dark:border-gray-700">
+            <button
+              onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
+              className="flex items-center justify-center w-full p-2 text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-colors"
+              title={isSidebarCollapsed ? "Mở rộng" : "Thu gọn"}
+            >
+              {isSidebarCollapsed ? <ChevronRight size={20} /> : <ChevronLeft size={20} />}
+            </button>
+          </div>
         </aside>
 
         {/* Main Content */}
-        <main className="flex-1 overflow-y-auto bg-gray-50 dark:bg-gray-900 p-4 sm:p-6 lg:p-8">
+        <main className="flex-1 overflow-y-auto bg-gray-50 dark:bg-gray-900 p-4 sm:p-6 lg:p-8 transition-all duration-300">
           <Outlet />
         </main>
       </div>

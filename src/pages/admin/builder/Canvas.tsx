@@ -26,13 +26,13 @@ export default function Canvas() {
 
   return (
     <div 
-      className="flex-1 overflow-y-auto p-4 sm:p-8 bg-gray-50"
+      className="flex-1 overflow-y-auto p-4 sm:p-8 bg-gray-50 dark:bg-gray-950 transition-colors"
       onClick={() => setActiveBlock(null)}
     >
       <div className="max-w-3xl mx-auto pb-32">
         {blocks.length === 0 ? (
-          <div className="text-center py-20 bg-white border-2 border-dashed border-gray-300 rounded-xl">
-            <p className="text-gray-500">Chưa có câu hỏi nào. Hãy chọn từ thanh công cụ bên trái.</p>
+          <div className="text-center py-20 bg-white dark:bg-gray-900 border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-xl">
+            <p className="text-gray-500 dark:text-gray-400">Chưa có câu hỏi nào. Hãy chọn từ thanh công cụ bên trái.</p>
           </div>
         ) : (
           <DragDropContext onDragEnd={handleDragEnd}>
@@ -56,35 +56,35 @@ export default function Canvas() {
                               setActiveBlock(block.id);
                             }}
                             className={cn(
-                              "bg-white rounded-xl border-2 transition-all cursor-pointer relative group",
+                              "bg-white dark:bg-gray-900 rounded-xl border-2 transition-all cursor-pointer relative group",
                               activeBlockId === block.id 
-                                ? "border-blue-500 shadow-md ring-4 ring-blue-50" 
-                                : "border-transparent shadow-sm hover:border-gray-300",
-                              snapshot.isDragging ? "shadow-xl ring-4 ring-blue-100 z-50" : ""
+                                ? "border-blue-500 shadow-md ring-4 ring-blue-50 dark:ring-blue-900/20" 
+                                : "border-transparent shadow-sm hover:border-gray-300 dark:hover:border-gray-700",
+                              snapshot.isDragging ? "shadow-xl ring-4 ring-blue-100 dark:ring-blue-900/30 z-50" : ""
                             )}
                           >
                           {/* Drag Handle & Actions */}
                           <div 
                             {...provided.dragHandleProps}
-                            className="absolute left-0 top-0 bottom-0 w-8 flex flex-col items-center py-4 opacity-0 group-hover:opacity-100 transition-opacity bg-gray-50 rounded-l-xl border-r border-gray-100 hover:bg-gray-100"
+                            className="absolute left-0 top-0 bottom-0 w-8 flex flex-col items-center py-4 opacity-0 group-hover:opacity-100 transition-opacity bg-gray-50 dark:bg-gray-800 rounded-l-xl border-r border-gray-100 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700"
                           >
-                            <GripVertical size={16} className="text-gray-400" />
+                            <GripVertical size={16} className="text-gray-400 dark:text-gray-500" />
                           </div>
 
                           <div className="pl-10 pr-6 py-5">
                             <div className="flex items-start justify-between gap-4">
                               <div className="flex-1">
                                 <div className="flex items-center gap-2 mb-1">
-                                  <span className="text-xs font-mono bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded">
+                                  <span className="text-xs font-mono bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 px-1.5 py-0.5 rounded">
                                     {block.code}
                                   </span>
-                                  {block.required && <span className="text-xs text-red-500 font-medium">* Bắt buộc</span>}
+                                  {block.required && <span className="text-xs text-red-500 dark:text-red-400 font-medium">* Bắt buộc</span>}
                                 </div>
-                                <h3 className="text-base font-medium text-gray-900">
+                                <h3 className="text-base font-medium text-gray-900 dark:text-white">
                                   {block.title || 'Chưa có tiêu đề'}
                                 </h3>
                                 {block.description && (
-                                  <p className="text-sm text-gray-500 mt-1">{block.description}</p>
+                                  <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{block.description}</p>
                                 )}
                               </div>
 
@@ -93,7 +93,7 @@ export default function Canvas() {
                                 <div className="flex items-center gap-1 shrink-0">
                                   <button 
                                     onClick={(e) => handleDuplicate(e, block)}
-                                    className="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors"
+                                    className="p-1.5 text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-md transition-colors"
                                     title="Nhân bản"
                                   >
                                     <Copy size={16} />
@@ -103,7 +103,7 @@ export default function Canvas() {
                                       e.stopPropagation();
                                       removeBlock(block.id);
                                     }}
-                                    className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors"
+                                    className="p-1.5 text-gray-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-md transition-colors"
                                     title="Xóa"
                                   >
                                     <Trash2 size={16} />
@@ -115,22 +115,22 @@ export default function Canvas() {
                             {/* Block Preview Content */}
                             <div className="mt-4">
                               {block.type === 'content' && (
-                                <div className="bg-blue-50 p-4 rounded-lg border border-blue-100">
-                                  <p className="text-sm text-blue-700 italic">Khối nội dung hiển thị (Giới thiệu / Hướng dẫn / Tiêu đề nhóm)</p>
+                                <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg border border-blue-100 dark:border-blue-800">
+                                  <p className="text-sm text-blue-700 dark:text-blue-400 italic">Khối nội dung hiển thị (Giới thiệu / Hướng dẫn / Tiêu đề nhóm)</p>
                                 </div>
                               )}
                               {block.type === 'contact' && (
                                 <div className="grid grid-cols-2 gap-2">
-                                  <div className="h-8 bg-gray-50 border border-gray-200 rounded px-2 flex items-center text-xs text-gray-400">Họ tên</div>
-                                  <div className="h-8 bg-gray-50 border border-gray-200 rounded px-2 flex items-center text-xs text-gray-400">Email</div>
+                                  <div className="h-8 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded px-2 flex items-center text-xs text-gray-400 dark:text-gray-500">Họ tên</div>
+                                  <div className="h-8 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded px-2 flex items-center text-xs text-gray-400 dark:text-gray-500">Email</div>
                                 </div>
                               )}
                               {block.type === 'single_choice' && (
                                 <div className="space-y-2">
                                   {block.options?.map(opt => (
                                     <div key={opt.id} className="flex items-center gap-2">
-                                      <div className="w-4 h-4 rounded-full border border-gray-300"></div>
-                                      <span className="text-sm text-gray-700">{opt.label}</span>
+                                      <div className="w-4 h-4 rounded-full border border-gray-300 dark:border-gray-600"></div>
+                                      <span className="text-sm text-gray-700 dark:text-gray-300">{opt.label}</span>
                                     </div>
                                   ))}
                                 </div>
@@ -139,29 +139,29 @@ export default function Canvas() {
                                 <div className="space-y-2">
                                   {block.options?.map(opt => (
                                     <div key={opt.id} className="flex items-center gap-2">
-                                      <div className="w-4 h-4 rounded border border-gray-300"></div>
-                                      <span className="text-sm text-gray-700">{opt.label}</span>
+                                      <div className="w-4 h-4 rounded border border-gray-300 dark:border-gray-600"></div>
+                                      <span className="text-sm text-gray-700 dark:text-gray-300">{opt.label}</span>
                                     </div>
                                   ))}
                                 </div>
                               )}
                               {block.type === 'likert' && (
-                                <div className="flex justify-between items-center bg-gray-50 p-4 rounded-lg">
+                                <div className="flex justify-between items-center bg-gray-50 dark:bg-gray-800/50 p-4 rounded-lg">
                                   {block.options?.map(opt => (
                                     <div key={opt.id} className="flex flex-col items-center gap-2">
-                                      <div className="w-4 h-4 rounded-full border border-gray-300 bg-white"></div>
-                                      <span className="text-xs text-gray-600 text-center max-w-[80px]">{opt.label}</span>
+                                      <div className="w-4 h-4 rounded-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700"></div>
+                                      <span className="text-xs text-gray-600 dark:text-gray-400 text-center max-w-[80px]">{opt.label}</span>
                                     </div>
                                   ))}
                                 </div>
                               )}
                               {block.type === 'text' && (
-                                <div className="w-full h-12 rounded-md border border-gray-300 bg-gray-50"></div>
+                                <div className="w-full h-12 rounded-md border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800"></div>
                               )}
                               {block.type === 'matrix' && (
                                 <div className="overflow-x-auto">
-                                  <table className="w-full text-sm text-left text-gray-500">
-                                    <thead className="text-xs text-gray-700 bg-gray-50">
+                                  <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                                    <thead className="text-xs text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-800">
                                       <tr>
                                         <th className="px-4 py-2"></th>
                                         {block.columns?.map(col => (
@@ -171,11 +171,11 @@ export default function Canvas() {
                                     </thead>
                                     <tbody>
                                       {block.rows?.map(row => (
-                                        <tr key={row.id} className="bg-white border-b">
-                                          <td className="px-4 py-2 font-medium text-gray-900">{row.label}</td>
+                                        <tr key={row.id} className="bg-white dark:bg-gray-900 border-b dark:border-gray-700">
+                                          <td className="px-4 py-2 font-medium text-gray-900 dark:text-white">{row.label}</td>
                                           {block.columns?.map(col => (
                                             <td key={col.id} className="px-4 py-2 text-center">
-                                              <div className="w-4 h-4 rounded-full border border-gray-300 mx-auto"></div>
+                                              <div className="w-4 h-4 rounded-full border border-gray-300 dark:border-gray-600 mx-auto"></div>
                                             </td>
                                           ))}
                                         </tr>

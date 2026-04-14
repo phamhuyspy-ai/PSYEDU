@@ -81,22 +81,22 @@ export default function ConfigPanel() {
 
   if (!activeBlock) {
     return (
-      <div className="w-80 bg-white border-l border-gray-200 flex flex-col shrink-0 h-full">
-        <div className="p-4 border-b border-gray-200 flex items-center justify-between">
+      <div className="w-80 bg-white dark:bg-gray-800 border-l border-gray-200 dark:border-gray-700 flex flex-col shrink-0 h-full transition-colors">
+        <div className="p-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Settings2 size={18} className="text-gray-500" />
-            <h2 className="font-semibold text-gray-900">Cài đặt Bảng hỏi</h2>
+            <Settings2 size={18} className="text-gray-500 dark:text-gray-400" />
+            <h2 className="font-semibold text-gray-900 dark:text-white">Cài đặt Bảng hỏi</h2>
           </div>
         </div>
         <div className="flex-1 overflow-y-auto p-4 space-y-6">
           <div className="space-y-4">
-            <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider">Thông tin chung</h3>
+            <h3 className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Thông tin chung</h3>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Loại biểu mẫu</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Loại biểu mẫu</label>
               <select 
                 value={form?.type}
                 onChange={(e) => updateFormMeta({ type: e.target.value as FormType })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-blue-500 focus:border-blue-500"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
               >
                 <option value="survey">Bảng hỏi & Khảo sát</option>
                 <option value="assessment">Lượng giá & Đánh giá</option>
@@ -104,18 +104,18 @@ export default function ConfigPanel() {
             </div>
           </div>
 
-          <div className="space-y-4 pt-4 border-t border-gray-100">
-            <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider">Lời động viên (Encouragement)</h3>
-            <p className="text-xs text-gray-500">Hiển thị lời động viên sau khi người dùng hoàn thành một số câu hỏi.</p>
+          <div className="space-y-4 pt-4 border-t border-gray-100 dark:border-gray-700">
+            <h3 className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Lời động viên (Encouragement)</h3>
+            <p className="text-xs text-gray-500 dark:text-gray-400">Hiển thị lời động viên sau khi người dùng hoàn thành một số câu hỏi.</p>
             
             <div className="space-y-3">
               {form?.encouragement_messages?.map((msg) => (
-                <div key={msg.id} className="p-3 bg-gray-50 rounded-lg border border-gray-200 space-y-2">
+                <div key={msg.id} className="p-3 bg-gray-50 dark:bg-gray-900/50 rounded-lg border border-gray-200 dark:border-gray-700 space-y-2">
                   <div className="flex items-center justify-between">
                     <select 
                       value={msg.after_block_index}
                       onChange={(e) => updateEncouragement(msg.id, { after_block_index: Number(e.target.value) })}
-                      className="text-xs border-gray-300 rounded bg-white"
+                      className="text-xs border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                     >
                       <option value={-1}>Sau thông tin liên hệ</option>
                       {blocks.map((b, idx) => (
@@ -124,7 +124,7 @@ export default function ConfigPanel() {
                     </select>
                     <button 
                       onClick={() => handleRemoveEncouragement(msg.id)}
-                      className="text-gray-400 hover:text-red-600"
+                      className="text-gray-400 hover:text-red-600 dark:hover:text-red-400"
                     >
                       <Trash2 size={14} />
                     </button>
@@ -132,13 +132,13 @@ export default function ConfigPanel() {
                   <textarea 
                     value={msg.message}
                     onChange={(e) => updateEncouragement(msg.id, { message: e.target.value })}
-                    className="w-full text-xs p-2 border border-gray-300 rounded"
+                    className="w-full text-xs p-2 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                     rows={2}
                   />
                   <select 
                     value={msg.type}
                     onChange={(e) => updateEncouragement(msg.id, { type: e.target.value })}
-                    className="w-full text-xs border-gray-300 rounded bg-white"
+                    className="w-full text-xs border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                   >
                     <option value="motivation">Động viên</option>
                     <option value="success">Thành công</option>
@@ -148,7 +148,7 @@ export default function ConfigPanel() {
               ))}
               <button 
                 onClick={handleAddEncouragement}
-                className="w-full py-2 border-2 border-dashed border-gray-200 rounded-lg text-xs text-gray-500 hover:border-blue-300 hover:text-blue-600 transition-all flex items-center justify-center gap-1"
+                className="w-full py-2 border-2 border-dashed border-gray-200 dark:border-gray-700 rounded-lg text-xs text-gray-500 dark:text-gray-400 hover:border-blue-300 dark:hover:border-blue-700 hover:text-blue-600 dark:hover:text-blue-400 transition-all flex items-center justify-center gap-1"
               >
                 <Plus size={14} /> Thêm lời động viên
               </button>
@@ -160,15 +160,15 @@ export default function ConfigPanel() {
   }
 
   return (
-    <div className="w-80 bg-white border-l border-gray-200 flex flex-col shrink-0 h-full">
-      <div className="p-4 border-b border-gray-200 flex items-center justify-between">
+    <div className="w-80 bg-white dark:bg-gray-800 border-l border-gray-200 dark:border-gray-700 flex flex-col shrink-0 h-full transition-colors">
+      <div className="p-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Settings2 size={18} className="text-gray-500" />
-          <h2 className="font-semibold text-gray-900">Cấu hình</h2>
+          <Settings2 size={18} className="text-gray-500 dark:text-gray-400" />
+          <h2 className="font-semibold text-gray-900 dark:text-white">Cấu hình</h2>
         </div>
         <button 
           onClick={() => setActiveBlock(null)}
-          className="text-gray-400 hover:text-gray-600 p-1 rounded-md hover:bg-gray-100"
+          className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 p-1 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700"
         >
           <X size={18} />
         </button>
