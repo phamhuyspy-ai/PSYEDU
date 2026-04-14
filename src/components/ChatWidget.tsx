@@ -5,6 +5,8 @@ import { useSettingsStore } from '../store/settingsStore';
 import { useAppStore } from '../store/appStore';
 import { getAIChatResponse, ChatMessage } from '../services/aiService';
 import { cn } from '../lib/utils';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 export default function ChatWidget() {
   const { settings } = useSettingsStore();
@@ -13,6 +15,7 @@ export default function ChatWidget() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -20,6 +23,12 @@ export default function ChatWidget() {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
   }, [messages]);
+
+  useEffect(() => {
+    if (isChatOpen) {
+      setUnreadCount(0);
+    }
+  }, [isChatOpen]);
 
   if (!settings.AI_ENABLED) return null;
 
@@ -36,6 +45,9 @@ export default function ChatWidget() {
     try {
       const response = await getAIChatResponse(newMessages, settings, chatContext);
       setMessages([...newMessages, { role: 'model', text: response }]);
+      if (!isChatOpen) {
+        setUnreadCount(prev => prev + 1);
+      }
     } catch (error) {
       setMessages([...newMessages, { role: 'model', text: "Rất tiếc, đã có lỗi xảy ra khi kết nối với chuyên gia. Vui lòng thử lại sau." }]);
     } finally {
@@ -115,12 +127,12 @@ export default function ChatWidget() {
                         {m.role === 'user' ? <User size={16} /> : <Bot size={16} />}
                       </div>
                       <div className={cn(
-                        "p-3 rounded-2xl text-sm leading-relaxed",
+                        "p-3 rounded-2xl text-sm leading-relaxed prose dark:prose-invert prose-sm",
                         m.role === 'user' 
                           ? "bg-blue-600 text-white rounded-tr-none" 
                           : "bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 shadow-sm border border-gray-100 dark:border-gray-700 rounded-tl-none"
                       )}>
-                        {m.text}
+                        <ReactMarkdown remarkPlugins={[remarkGfm]}>{m.text}</ReactMarkdown>
                       </div>
                     </div>
                   ))}
@@ -164,11 +176,16 @@ export default function ChatWidget() {
       <button
         onClick={() => setChatOpen(!isChatOpen)}
         className={cn(
-          "w-14 h-14 rounded-full shadow-2xl flex items-center justify-center transition-all duration-300 active:scale-90",
+          "w-14 h-14 rounded-full shadow-2xl flex items-center justify-center transition-all duration-300 active:scale-90 relative",
           isChatOpen ? "bg-white text-gray-600 rotate-90" : "bg-blue-600 text-white hover:bg-blue-700"
         )}
       >
         {isChatOpen ? <X size={28} /> : <MessageCircle size={28} />}
+        {unreadCount > 0 && !isChatOpen && (
+          <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center">
+            {unreadCount}
+          </span>
+        )}
       </button>
     </div>
   );

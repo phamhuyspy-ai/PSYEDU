@@ -124,10 +124,19 @@ export default function LivePreview() {
           </div>
 
           {/* Footer */}
-          <div className="p-6 border-t border-gray-200 bg-gray-50 flex justify-end">
-            <button className="px-6 py-2 bg-blue-600 text-white rounded-md font-medium text-sm opacity-50 cursor-not-allowed">
-              Gửi câu trả lời
-            </button>
+          <div className="p-6 border-t border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900">
+            <div className="flex justify-between mb-4">
+              <button className="px-6 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-md font-medium text-sm opacity-50 cursor-not-allowed">
+                Quay lại
+              </button>
+              <button className="px-6 py-2 bg-blue-600 text-white rounded-md font-medium text-sm opacity-50 cursor-not-allowed">
+                Gửi câu trả lời
+              </button>
+            </div>
+            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+              <div className="bg-blue-600 h-2 rounded-full" style={{ width: '50%' }}></div>
+            </div>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 text-center">Đã hoàn thành 50%</p>
           </div>
         </div>
       </div>

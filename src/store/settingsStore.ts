@@ -69,8 +69,8 @@ const DEFAULT_SETTINGS: SystemSettings = {
   SOCIAL_FACEBOOK: '',
   SOCIAL_TIKTOK: '',
   
-  GAS_WEB_APP_URL: 'https://script.google.com/macros/s/AKfycby1O7sdi82kUHVBmyowsOBkkd0SIMH8zt9r8IQQPzjSIBQmrGbT2e_77yUsyYQzrvWp/exec',
-  GOOGLE_SHEET_ID: '1BxiMVs0X...',
+  GAS_WEB_APP_URL: 'https://script.google.com/macros/s/AKfycbxEzPiN7CYxJJbbbx3Yx90r2KQ-YOxNyw4ycTB8nSo/dev',
+  GOOGLE_SHEET_ID: '1Jx6tf1eYRjJKImHFMeLOXUjHR7S8EVeU4uICNgHu0kLjHAuZ8KgnREUa',
   DRIVE_FOLDER_ID: '1A_...',
   
   APP_URL: 'https://psyedu.vn',
