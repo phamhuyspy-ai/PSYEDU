@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Save, Upload, Type, Palette, X } from 'lucide-react';
+import { Save, Upload, Type, Palette, X, Loader2 } from 'lucide-react';
 
 export default function Branding() {
   const [primaryColor, setPrimaryColor] = useState('#2563eb'); // blue-600
@@ -9,10 +9,20 @@ export default function Branding() {
   const [logoUrl, setLogoUrl] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleSave = () => {
-    // In a real app, this would send data to the backend
-    console.log({ primaryColor, secondaryColor, backgroundColor, fontFamily, logoUrl });
-    alert('Đã lưu cấu hình thương hiệu thành công!');
+  const [isSaving, setIsSaving] = useState(false);
+
+  const handleSave = async () => {
+    setIsSaving(true);
+    try {
+      // Giả lập gọi API
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      console.log({ primaryColor, secondaryColor, backgroundColor, fontFamily, logoUrl });
+      alert('Đã lưu cấu hình thương hiệu thành công!');
+    } catch (error) {
+      alert('Có lỗi xảy ra khi lưu cấu hình. Vui lòng thử lại.');
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -77,10 +87,20 @@ export default function Branding() {
         </div>
         <button 
           onClick={handleSave}
-          className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+          disabled={isSaving}
+          className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors disabled:opacity-50"
         >
-          <Save size={18} />
-          Lưu thay đổi
+          {isSaving ? (
+            <>
+              <Loader2 size={18} className="animate-spin" />
+              Đang lưu...
+            </>
+          ) : (
+            <>
+              <Save size={18} />
+              Lưu thay đổi
+            </>
+          )}
         </button>
       </div>
 
