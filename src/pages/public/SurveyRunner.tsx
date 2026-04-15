@@ -38,6 +38,7 @@ export default function SurveyRunner() {
     code: 'SURVEY',
     title: language === 'vi' ? 'Bảng hỏi khảo sát' : 'Survey Questionnaire',
     description: language === 'vi' ? 'Vui lòng hoàn thành các câu hỏi dưới đây.' : 'Please complete the questions below.',
+    reward: { type: 'none', value: '', message: '' },
     encouragement_messages: [
       { id: 'e1', after_block_index: 1, message: t.runner.encouragement.motivation, type: 'motivation' },
       { id: 'e2', after_block_index: 2, message: t.runner.encouragement.success, type: 'success' }
@@ -45,15 +46,7 @@ export default function SurveyRunner() {
   };
 
   // Mock blocks if store is empty
-  const blocks: any[] = storeBlocks.length > 0 ? storeBlocks : [
-    { id: '1', type: 'content', title: language === 'vi' ? 'Chào mừng' : 'Welcome', description: language === 'vi' ? `Chào mừng bạn đến với khảo sát của ${settings.APP_NAME}. Vui lòng đọc kỹ hướng dẫn trước khi làm.` : `Welcome to the ${settings.APP_NAME} survey. Please read the instructions carefully.`, required: false, sort_order: 0 },
-    { id: '2', type: 'single_choice', title: language === 'vi' ? 'Bạn cảm thấy thế nào hôm nay?' : 'How do you feel today?', required: true, options: [
-      { id: 'o1', label: language === 'vi' ? 'Rất tốt' : 'Very good', score: 10 },
-      { id: 'o2', label: language === 'vi' ? 'Bình thường' : 'Normal', score: 5 },
-      { id: 'o3', label: language === 'vi' ? 'Không tốt' : 'Not good', score: 0 },
-    ], sort_order: 1 },
-    { id: '3', type: 'text', title: language === 'vi' ? 'Hãy chia sẻ thêm về cảm xúc của bạn' : 'Please share more about your feelings', required: false, sort_order: 2 },
-  ];
+  const blocks: any[] = storeBlocks;
 
   const isContactStep = currentBlockIndex === -1;
   const currentBlock = blocks[currentBlockIndex];
@@ -187,8 +180,16 @@ export default function SurveyRunner() {
         });
       }
       
-      // Redirect to results with score in state
-      navigate(`/r/${submissionId}`, { state: { totalScore } });
+      // Redirect to results with full data in state
+      const resultsData = {
+        totalScore,
+        maxScore: blocks.reduce((acc, b) => acc + (b.max_score || 0), 0) || 100,
+        message: resultMessage,
+        chartData: [], // We could calculate this based on subscales
+        details: [],
+        reward: activeForm.reward
+      };
+      navigate(`/r/${submissionId}`, { state: { totalScore, results: resultsData } });
     } catch (err) {
       console.error('Submit error:', err);
       setError(language === 'vi' ? 'Có lỗi xảy ra khi gửi dữ liệu. Vui lòng thử lại.' : 'An error occurred while sending data. Please try again.');
@@ -212,7 +213,9 @@ export default function SurveyRunner() {
         <header className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 py-4 px-4 sm:px-6 md:px-8 sticky top-0 z-10">
           <div className="max-w-4xl mx-auto flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold">P</div>
+              <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center overflow-hidden border border-gray-200">
+                <img src={settings.LOGO_URL} alt="Logo" className="w-full h-full object-contain p-1" referrerPolicy="no-referrer" />
+              </div>
               <h1 className="font-semibold text-gray-900 dark:text-white truncate max-w-[200px] sm:max-w-md">
                 {activeForm.title}
               </h1>

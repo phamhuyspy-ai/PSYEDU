@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Outlet, NavLink, useNavigate, useLocation } from 'react-router-dom';
+import { useSettingsStore } from '../store/settingsStore';
 import { useAuthStore } from '../store/authStore';
 import { useAppStore } from '../store/appStore';
 import { translations } from '../lib/translations';
@@ -17,13 +18,15 @@ import {
   ChevronDown,
   ChevronLeft,
   ChevronRight,
-  Key
+  Key,
+  Home
 } from 'lucide-react';
 import { cn } from '../lib/utils';
 import ThemeLanguageToggle from '../components/ThemeLanguageToggle';
 import ChangePasswordModal from '../components/admin/ChangePasswordModal';
 
 export default function AdminLayout() {
+  const { settings } = useSettingsStore();
   const { user, logout } = useAuthStore();
   const { theme, language } = useAppStore();
   const t = translations[language];
@@ -47,6 +50,7 @@ export default function AdminLayout() {
   };
 
   const navItems = [
+    { to: '/', icon: Home, label: language === 'vi' ? 'Trang chủ' : 'Home' },
     { to: '/admin', icon: LayoutDashboard, label: t.admin.dashboard, end: true },
     { to: '/admin/forms', icon: List, label: t.admin.forms },
     { to: '/admin/publish', icon: Send, label: t.admin.publish },
@@ -67,10 +71,10 @@ export default function AdminLayout() {
             {isSidebarOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-blue-600 rounded-md flex items-center justify-center">
-              <span className="text-white font-bold text-lg">P</span>
+            <div className="w-8 h-8 bg-white rounded-md flex items-center justify-center overflow-hidden border border-gray-200">
+              <img src={settings.LOGO_URL} alt="Logo" className="w-full h-full object-contain p-1" referrerPolicy="no-referrer" />
             </div>
-            <span className="font-semibold text-xl text-gray-900 dark:text-white hidden sm:block">PSYEDU RESEARCH</span>
+            <span className="font-semibold text-xl text-gray-900 dark:text-white hidden sm:block">{settings.APP_NAME}</span>
           </div>
         </div>
 

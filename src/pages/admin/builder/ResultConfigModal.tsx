@@ -149,7 +149,7 @@ export default function ResultConfigModal({ onClose }: ResultConfigModalProps) {
                 <label className="block text-sm font-medium text-gray-700 mb-1">Loại phần thưởng</label>
                 <select 
                   value={rewardType}
-                  onChange={(e) => setRewardType(e.target.value)}
+                  onChange={(e) => setRewardType(e.target.value as any)}
                   className="w-full border border-gray-300 rounded-md p-2 text-sm focus:ring-blue-500 focus:border-blue-500"
                 >
                   <option value="none">Không có</option>

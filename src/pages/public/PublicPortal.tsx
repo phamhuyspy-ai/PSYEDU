@@ -18,14 +18,7 @@ export default function PublicPortal() {
   const t = translations[language];
 
   useEffect(() => {
-    if (forms.length === 0) {
-      setForms([
-        { id: '1', code: 'PHS_01', title: language === 'vi' ? 'Đánh giá Sức khỏe Tâm thần Học đường' : 'School Mental Health Assessment', description: language === 'vi' ? 'Dành cho học sinh THCS và THPT để đánh giá các chỉ số tâm lý cơ bản.' : 'For middle and high school students to assess basic psychological indicators.', type: 'assessment', publish_status: 'published', collection_status: 'open' },
-        { id: '2', code: 'PAR_02', title: language === 'vi' ? 'Khảo sát Ý kiến Phụ huynh' : 'Parent Feedback Survey', description: language === 'vi' ? 'Thu thập phản hồi về chương trình giáo dục kỹ năng sống năm học 2023-2024.' : 'Collecting feedback on the 2023-2024 life skills education program.', type: 'survey', publish_status: 'published', collection_status: 'open' },
-        { id: '3', code: 'TEA_03', title: language === 'vi' ? 'Đánh giá Môi trường Làm việc Giáo viên' : 'Teacher Working Environment Assessment', description: language === 'vi' ? 'Khảo sát mức độ hài lòng và áp lực công việc của đội ngũ giáo viên.' : 'Surveying job satisfaction and workload pressure of the teaching staff.', type: 'assessment', publish_status: 'published', collection_status: 'open' },
-        { id: '4', code: 'EDU_04', title: language === 'vi' ? 'Khảo sát Nhu cầu Đào tạo Kỹ năng' : 'Skills Training Needs Survey', description: language === 'vi' ? 'Tìm hiểu nhu cầu học tập các kỹ năng mềm của sinh viên.' : 'Finding out the soft skills learning needs of students.', type: 'survey', publish_status: 'published', collection_status: 'open' },
-      ]);
-    }
+    // Rely on store populated by admin
   }, [forms.length, setForms, language]);
 
   const activeForms = forms.filter(f => f.publish_status === 'published' && f.collection_status === 'open');

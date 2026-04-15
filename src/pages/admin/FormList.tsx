@@ -15,17 +15,13 @@ import { useBuilderStore, FormType } from '../../store/builderStore';
 import { cn } from '../../lib/utils';
 
 // Mock data
-const mockForms = [
-  { id: '1', code: 'DASS-21', title: 'Thang đo Trầm cảm, Lo âu, Căng thẳng', description: 'Đánh giá mức độ trầm cảm, lo âu và căng thẳng trong 1 tuần qua.', status: 'published', collection: 'open', responses: 450, updated_at: '2023-10-25', type: 'assessment' as FormType },
-  { id: '2', code: 'PHQ-9', title: 'Bảng hỏi Sức khỏe Bệnh nhân', description: 'Sàng lọc và chẩn đoán mức độ trầm cảm.', status: 'published', collection: 'closed', responses: 890, updated_at: '2023-10-20', type: 'assessment' as FormType },
-  { id: '3', code: 'GAD-7', title: 'Thang đo Rối loạn Lo âu Lan tỏa', description: 'Đánh giá mức độ lo âu.', status: 'draft', collection: 'closed', responses: 0, updated_at: '2023-10-28', type: 'assessment' as FormType },
-];
+const mockForms: any[] = [];
 
 export default function FormList() {
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
-  const setForm = useBuilderStore(state => state.setForm);
+  const { forms, setForm } = useBuilderStore();
 
   const [newForm, setNewForm] = useState({
     code: '',
@@ -33,6 +29,11 @@ export default function FormList() {
     description: '',
     type: 'survey' as FormType
   });
+
+  const filteredForms = forms.filter(f => 
+    f.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
+    f.code.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   const handleCreateForm = (e: React.FormEvent) => {
     e.preventDefault();
@@ -114,7 +115,7 @@ export default function FormList() {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
-              {mockForms.map((form) => (
+              {filteredForms.map((form) => (
                 <tr key={form.id} className="hover:bg-gray-50 transition-colors group">
                   <td className="px-6 py-4">
                     <div className="font-medium text-gray-900 text-base">{form.title}</div>
@@ -131,7 +132,7 @@ export default function FormList() {
                       )}>
                         {form.type === 'assessment' ? 'Lượng giá' : 'Bảng hỏi'}
                       </span>
-                      {form.status === 'published' ? (
+                      {form.publish_status === 'published' ? (
                         <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 w-max">
                           Đã xuất bản
                         </span>
@@ -140,7 +141,7 @@ export default function FormList() {
                           Bản nháp
                         </span>
                       )}
-                      {form.collection === 'open' ? (
+                      {form.collection_status === 'open' ? (
                         <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800 w-max">
                           Đang thu thập
                         </span>
@@ -152,10 +153,10 @@ export default function FormList() {
                     </div>
                   </td>
                   <td className="px-6 py-4 text-right font-medium text-gray-900">
-                    {form.responses}
+                    0
                   </td>
                   <td className="px-6 py-4 text-right text-gray-500">
-                    {form.updated_at}
+                    -
                   </td>
                   <td className="px-6 py-4 text-right">
                     <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">

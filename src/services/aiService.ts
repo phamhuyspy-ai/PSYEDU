@@ -28,7 +28,12 @@ export async function getAIChatResponse(
       
       ${context ? `Bối cảnh hiện tại (Kết quả khảo sát của người dùng): ${context}` : ''}
       
-      Hãy trả lời bằng ngôn ngữ của người dùng (mặc định là tiếng Việt).
+      HƯỚNG DẪN QUAN TRỌNG:
+      1. Tương tác như một con người thực thụ: Sử dụng ngôn ngữ tự nhiên, có cảm xúc (vui mừng khi người dùng có kết quả tốt, thấu cảm khi họ gặp khó khăn).
+      2. Ngữ cảnh: Luôn bám sát vào kết quả khảo sát của người dùng để đưa ra lời khuyên cá nhân hóa.
+      3. Tinh gọn & Dễ hiểu: Tránh dùng quá nhiều thuật ngữ chuyên môn khó hiểu. Hãy giải thích mọi thứ một cách đơn giản nhất.
+      4. Lời khuyên: Đưa ra những hành động cụ thể, thiết thực mà người dùng có thể thực hiện ngay.
+      5. Ngôn ngữ: Trả lời bằng tiếng Việt (hoặc ngôn ngữ người dùng đang dùng), phong cách ấm áp, chân thành.
     `;
 
     const history = messages.slice(0, -1).map(m => ({

@@ -82,8 +82,8 @@ export default function Login() {
 
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <div className="flex justify-center">
-          <div className="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg">
-            <span className="text-white font-bold text-2xl">P</span>
+          <div className="w-16 h-16 bg-white dark:bg-gray-900 rounded-2xl flex items-center justify-center shadow-xl border border-gray-100 dark:border-gray-800 overflow-hidden">
+            <img src={settings.LOGO_URL} alt="Logo" className="w-full h-full object-contain p-2" referrerPolicy="no-referrer" />
           </div>
         </div>
         <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900 dark:text-white uppercase">
@@ -92,7 +92,7 @@ export default function Login() {
         <p className="mt-2 text-center text-sm text-gray-600 dark:text-gray-400">
           {isForgotPassword 
             ? (language === 'vi' ? 'Nhập email để nhận mật khẩu mới' : 'Enter email to receive new password')
-            : 'Hệ thống quản trị PSYEDU RESEARCH'}
+            : `Hệ thống quản trị ${settings.APP_NAME}`}
         </p>
       </div>
 

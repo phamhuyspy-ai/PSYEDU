@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAppStore } from '../../store/appStore';
+import { useBuilderStore } from '../../store/builderStore';
 import { translations } from '../../lib/translations';
 import { cn } from '../../lib/utils';
 
@@ -17,19 +18,17 @@ export default function Dashboard() {
   const { language } = useAppStore();
   const t = translations[language];
 
+  const { forms } = useBuilderStore();
+
   const stats = [
-    { name: language === 'vi' ? 'Tổng số bảng hỏi' : 'Total Forms', value: '12', icon: FileText, color: 'text-blue-600', bg: 'bg-blue-100 dark:bg-blue-900/20' },
-    { name: language === 'vi' ? 'Đã xuất bản' : 'Published', value: '8', icon: CheckCircle, color: 'text-green-600', bg: 'bg-green-100 dark:bg-green-900/20' },
-    { name: language === 'vi' ? 'Đang thu thập' : 'Collecting', value: '5', icon: PlayCircle, color: 'text-purple-600', bg: 'bg-purple-100 dark:bg-purple-900/20' },
-    { name: language === 'vi' ? 'Tổng phản hồi' : 'Total Responses', value: '1,248', icon: Users, color: 'text-orange-600', bg: 'bg-orange-100 dark:bg-orange-900/20' },
-    { name: language === 'vi' ? 'Email đã gửi' : 'Emails Sent', value: '856', icon: Mail, color: 'text-teal-600', bg: 'bg-teal-100 dark:bg-teal-900/20' },
+    { name: language === 'vi' ? 'Tổng số bảng hỏi' : 'Total Forms', value: forms.length.toString(), icon: FileText, color: 'text-blue-600', bg: 'bg-blue-100 dark:bg-blue-900/20' },
+    { name: language === 'vi' ? 'Đã xuất bản' : 'Published', value: forms.filter(f => f.publish_status === 'published').length.toString(), icon: CheckCircle, color: 'text-green-600', bg: 'bg-green-100 dark:bg-green-900/20' },
+    { name: language === 'vi' ? 'Đang thu thập' : 'Collecting', value: forms.filter(f => f.collection_status === 'open').length.toString(), icon: PlayCircle, color: 'text-purple-600', bg: 'bg-purple-100 dark:bg-purple-900/20' },
+    { name: language === 'vi' ? 'Tổng phản hồi' : 'Total Responses', value: '0', icon: Users, color: 'text-orange-600', bg: 'bg-orange-100 dark:bg-orange-900/20' },
+    { name: language === 'vi' ? 'Email đã gửi' : 'Emails Sent', value: '0', icon: Mail, color: 'text-teal-600', bg: 'bg-teal-100 dark:bg-teal-900/20' },
   ];
 
-  const recentForms = [
-    { id: '1', code: 'DASS-21', title: 'Thang đo Trầm cảm, Lo âu, Căng thẳng', status: 'published', collection: 'open', responses: 450, date: '2023-10-25', type: 'assessment' },
-    { id: '2', code: 'PHQ-9', title: 'Bảng hỏi Sức khỏe Bệnh nhân', status: 'published', collection: 'closed', responses: 890, date: '2023-10-20', type: 'assessment' },
-    { id: '3', code: 'GAD-7', title: 'Thang đo Rối loạn Lo âu Lan tỏa', status: 'draft', collection: 'closed', responses: 0, date: '2023-10-28', type: 'assessment' },
-  ];
+  const recentForms = forms.slice(0, 5);
 
   return (
     <div className="space-y-6">
@@ -104,7 +103,7 @@ export default function Dashboard() {
                       )}>
                         {form.type === 'assessment' ? (language === 'vi' ? 'Lượng giá' : 'Assessment') : (language === 'vi' ? 'Bảng hỏi' : 'Survey')}
                       </span>
-                      {form.status === 'published' ? (
+                      {form.publish_status === 'published' ? (
                         <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400 w-max">
                           {language === 'vi' ? 'Đã xuất bản' : 'Published'}
                         </span>
@@ -113,7 +112,7 @@ export default function Dashboard() {
                           {language === 'vi' ? 'Bản nháp' : 'Draft'}
                         </span>
                       )}
-                      {form.collection === 'open' && (
+                      {form.collection_status === 'open' && (
                         <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-400 w-max">
                           {language === 'vi' ? 'Đang thu thập' : 'Collecting'}
                         </span>
@@ -121,10 +120,10 @@ export default function Dashboard() {
                     </div>
                   </td>
                   <td className="px-6 py-4 text-right font-medium text-gray-900 dark:text-white">
-                    {form.responses}
+                    0
                   </td>
                   <td className="px-6 py-4 text-right text-gray-500 dark:text-gray-400">
-                    {form.date}
+                    -
                   </td>
                 </tr>
               ))}

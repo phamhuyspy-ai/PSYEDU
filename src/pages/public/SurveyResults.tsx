@@ -26,29 +26,20 @@ export default function SurveyResults() {
   const [isClaimingReward, setIsClaimingReward] = useState(false);
 
   const passedScore = location.state?.totalScore;
+  const passedResults = location.state?.results;
 
-  // Mock data for results
-  const results = {
-    totalScore: passedScore !== undefined ? passedScore : 75,
+  // Real data or fallback
+  const results = passedResults || {
+    totalScore: passedScore !== undefined ? passedScore : 0,
     maxScore: 100,
-    message: language === 'vi' ? "Bạn có sức khỏe tâm thần tốt. Hãy tiếp tục duy trì lối sống lành mạnh và cân bằng." : "You have good mental health. Please continue to maintain a healthy and balanced lifestyle.",
-    chartData: [
-      { subject: language === 'vi' ? 'Cảm xúc' : 'Emotion', A: 80, fullMark: 100 },
-      { subject: language === 'vi' ? 'Xã hội' : 'Social', A: 65, fullMark: 100 },
-      { subject: language === 'vi' ? 'Học tập' : 'Study', A: 90, fullMark: 100 },
-      { subject: language === 'vi' ? 'Gia đình' : 'Family', A: 70, fullMark: 100 },
-      { subject: language === 'vi' ? 'Tự tin' : 'Confidence', A: 85, fullMark: 100 },
-    ],
-    details: [
-      { category: language === 'vi' ? 'Sức khỏe thể chất' : 'Physical Health', score: 85, interpretation: language === 'vi' ? 'Tốt' : 'Good' },
-      { category: language === 'vi' ? 'Mối quan hệ' : 'Relationships', score: 60, interpretation: language === 'vi' ? 'Cần cải thiện' : 'Needs improvement' },
-      { category: language === 'vi' ? 'Áp lực học tập' : 'Academic Pressure', score: 45, interpretation: language === 'vi' ? 'Trung bình' : 'Average' },
-    ],
-    reward: {
-      type: 'voucher',
-      value: 'PSYEDU2024',
-      message: language === 'vi' ? 'Chúc mừng! Bạn nhận được mã giảm giá 20% cho khóa học kỹ năng sống.' : 'Congratulations! You received a 20% discount code for a life skills course.'
-    }
+    message: language === 'vi' ? "Cảm ơn bạn đã tham gia khảo sát." : "Thank you for participating in the survey.",
+    chartData: [],
+    details: [],
+    reward: form?.reward?.type !== 'none' ? {
+      type: form?.reward?.type || 'none',
+      value: form?.reward?.value || '',
+      message: form?.reward?.message || ''
+    } : null
   };
 
   const handleDownloadPDF = async () => {
@@ -162,8 +153,8 @@ export default function SurveyResults() {
             animate={{ opacity: 1, y: 0 }}
             className="bg-white dark:bg-gray-900 rounded-3xl p-8 text-center shadow-sm border border-gray-100 dark:border-gray-800"
           >
-            <div className="w-20 h-20 bg-green-100 dark:bg-green-900/20 text-green-600 dark:text-green-400 rounded-full flex items-center justify-center mx-auto mb-6">
-              <CheckCircle2 size={48} />
+            <div className="w-20 h-20 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-6 overflow-hidden border border-gray-100 dark:border-gray-700">
+              <img src={settings.LOGO_URL} alt="Logo" className="w-full h-full object-contain p-4" referrerPolicy="no-referrer" />
             </div>
             <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">{t.results.completed}</h1>
             <p className="text-gray-500 dark:text-gray-400 text-lg">

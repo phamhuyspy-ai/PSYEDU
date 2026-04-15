@@ -51,6 +51,8 @@ export interface SystemSettings {
   AI_SYSTEM_PROMPT: string;
   AI_KNOWLEDGE_BASE: string;
   FOOTER_LINKS: { label: string, url: string }[];
+  LOGO_URL: string;
+  FAVICON_URL: string;
 }
 
 interface SettingsState {
@@ -105,6 +107,8 @@ const DEFAULT_SETTINGS: SystemSettings = {
     { label: 'Chính sách bảo mật', url: '#' },
     { label: 'Điều khoản sử dụng', url: '#' }
   ],
+  LOGO_URL: 'https://psyedu.vn/wp-content/uploads/2023/06/logo-psyedu.png',
+  FAVICON_URL: 'https://psyedu.vn/wp-content/uploads/2023/06/favicon.png',
 };
 
 export const useSettingsStore = create<SettingsState>()(
