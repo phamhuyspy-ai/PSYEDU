@@ -10,16 +10,6 @@ export default function Publish() {
   const { forms, setForms } = useBuilderStore();
   const qrRef = useRef<SVGSVGElement>(null);
 
-  // Mock fetching forms if list is empty
-  useEffect(() => {
-    if (forms.length === 0) {
-      setForms([
-        { id: '1', code: 'PHS_01', title: 'Đánh giá Sức khỏe Tâm thần Học đường', description: 'Dành cho học sinh THCS', type: 'survey', publish_status: 'published', collection_status: 'open' },
-        { id: '2', code: 'PAR_02', title: 'Khảo sát Ý kiến Phụ huynh', description: 'Về chương trình giáo dục kỹ năng sống', type: 'survey', publish_status: 'draft', collection_status: 'closed' },
-      ]);
-    }
-  }, [forms.length, setForms]);
-
   const activeForm = forms.find(f => f.id === formId);
   const surveyUrl = `${window.location.origin}/s/${formId || 'demo-form'}`;
 

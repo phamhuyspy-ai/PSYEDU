@@ -22,13 +22,7 @@ export default function Results() {
   const activeForm = forms.find(f => f.id === formId);
   const [searchTerm, setSearchTerm] = useState('');
 
-  // Mock submissions
-  const submissions = [
-    { id: 'sub_1', user: 'Nguyễn Văn A', email: 'vana@gmail.com', score: 85, date: '2024-04-12 14:30' },
-    { id: 'sub_2', user: 'Trần Thị B', email: 'thib@yahoo.com', score: 62, date: '2024-04-12 15:15' },
-    { id: 'sub_3', user: 'Lê Văn C', email: 'vanc@outlook.com', score: 45, date: '2024-04-13 09:00' },
-    { id: 'sub_4', user: 'Phạm Thị D', email: 'thid@gmail.com', score: 92, date: '2024-04-13 10:45' },
-  ];
+  const submissions: any[] = [];
 
   const exportToExcel = () => {
     const worksheet = XLSX.utils.json_to_sheet(submissions);
@@ -111,22 +105,22 @@ export default function Results() {
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
         <div className="bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm">
           <p className="text-sm text-gray-500 dark:text-gray-400 font-medium">Tổng số phản hồi</p>
-          <p className="text-3xl font-bold text-gray-900 dark:text-white mt-2">1,248</p>
-          <div className="flex items-center gap-1 text-green-600 dark:text-green-400 text-xs mt-2 font-medium">
-            <span>+12% so với tháng trước</span>
+          <p className="text-3xl font-bold text-gray-900 dark:text-white mt-2">0</p>
+          <div className="flex items-center gap-1 text-gray-400 text-xs mt-2 font-medium">
+            <span>Chưa có dữ liệu</span>
           </div>
         </div>
         <div className="bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm">
           <p className="text-sm text-gray-500 dark:text-gray-400 font-medium">Điểm trung bình</p>
-          <p className="text-3xl font-bold text-gray-900 dark:text-white mt-2">72.5</p>
-          <div className="flex items-center gap-1 text-blue-600 dark:text-blue-400 text-xs mt-2 font-medium">
-            <span>Mức độ: Khá</span>
+          <p className="text-3xl font-bold text-gray-900 dark:text-white mt-2">0</p>
+          <div className="flex items-center gap-1 text-gray-400 text-xs mt-2 font-medium">
+            <span>Chưa có dữ liệu</span>
           </div>
         </div>
         <div className="bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm">
           <p className="text-sm text-gray-500 dark:text-gray-400 font-medium">Thời gian hoàn thành TB</p>
-          <p className="text-3xl font-bold text-gray-900 dark:text-white mt-2">4:30</p>
-          <div className="flex items-center gap-1 text-gray-400 dark:text-gray-500 text-xs mt-2 font-medium">
+          <p className="text-3xl font-bold text-gray-900 dark:text-white mt-2">0:00</p>
+          <div className="flex items-center gap-1 text-gray-400 text-xs mt-2 font-medium">
             <span>Phút:Giây</span>
           </div>
         </div>

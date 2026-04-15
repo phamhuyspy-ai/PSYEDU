@@ -4,6 +4,7 @@ import { useBuilderStore } from '../../store/builderStore';
 import { useAppStore } from '../../store/appStore';
 import { useSettingsStore } from '../../store/settingsStore';
 import { translations } from '../../lib/translations';
+import { gasRequest } from '../../services/gasService';
 import { motion, AnimatePresence } from 'motion/react';
 import { ChevronRight, ChevronLeft, Send, AlertCircle, CheckCircle2, Sparkles, Trophy, Heart } from 'lucide-react';
 import { cn } from '../../lib/utils';
@@ -172,12 +173,7 @@ export default function SurveyRunner() {
 
       // 3. Gửi dữ liệu lên GAS
       if (settings.GAS_WEB_APP_URL && !settings.GAS_WEB_APP_URL.includes('AKfycb...TODO')) {
-        await fetch(settings.GAS_WEB_APP_URL, {
-          method: 'POST',
-          mode: 'no-cors',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify(payload)
-        });
+        await gasRequest(payload as any, settings);
       }
       
       // Redirect to results with full data in state

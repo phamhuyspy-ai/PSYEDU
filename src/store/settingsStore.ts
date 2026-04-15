@@ -57,7 +57,9 @@ export interface SystemSettings {
 
 interface SettingsState {
   settings: SystemSettings;
+  hasHydrated: boolean;
   updateSettings: (updates: Partial<SystemSettings>) => void;
+  setHasHydrated: (state: boolean) => void;
 }
 
 const DEFAULT_SETTINGS: SystemSettings = {
@@ -115,12 +117,17 @@ export const useSettingsStore = create<SettingsState>()(
   persist(
     (set) => ({
       settings: DEFAULT_SETTINGS,
+      hasHydrated: false,
       updateSettings: (updates) => set((state) => ({
         settings: { ...state.settings, ...updates }
       })),
+      setHasHydrated: (state) => set({ hasHydrated: state }),
     }),
     {
       name: 'psyedu-system-settings',
+      onRehydrateStorage: () => (state) => {
+        state?.setHasHydrated(true);
+      },
     }
   )
 );

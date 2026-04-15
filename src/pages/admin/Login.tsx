@@ -46,16 +46,11 @@ export default function Login() {
       return;
     }
 
-    // PIN verification
-    if (pin !== '010216') {
-      setError(language === 'vi' ? 'Mã PIN xác minh admin không chính xác.' : 'Incorrect admin verification PIN.');
-      return;
-    }
-
+    // PIN verification is now handled by GAS
     setIsLoading(true);
 
     try {
-      await login(email, password);
+      await login(email, password, pin);
       navigate('/admin');
     } catch (err: any) {
       setError(err.message || (language === 'vi' ? 'Đăng nhập thất bại' : 'Login failed'));

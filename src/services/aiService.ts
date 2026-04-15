@@ -1,6 +1,11 @@
 import { GoogleGenAI } from "@google/genai";
 import { SystemSettings } from "../store/settingsStore";
 
+// CẢNH BÁO BẢO MẬT: 
+// Việc gọi trực tiếp API AI từ frontend (trình duyệt) có thể làm lộ API Key.
+// Trong môi trường production thực tế, nên chuyển logic gọi AI này sang backend (ví dụ: Node.js server hoặc Google Apps Script)
+// để ẩn API Key. Hiện tại, để đảm bảo tính năng hoạt động nhanh, logic vẫn giữ ở frontend.
+
 export interface ChatMessage {
   role: 'user' | 'model';
   text: string;

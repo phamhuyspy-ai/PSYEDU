@@ -2,10 +2,12 @@ import { FormMeta, Block } from '../store/builderStore';
 import { SystemSettings } from '../store/settingsStore';
 
 interface GasSyncPayload {
-  action: 'sync_schema' | 'submit_data' | 'update_password' | 'reset_password';
+  action: 'sync_schema' | 'submit_data' | 'update_password' | 'reset_password' | 'login_admin';
   form_id?: string;
   form_code?: string;
   email?: string;
+  password?: string;
+  pin?: string;
   new_password?: string;
   plan?: {
     sheet_name: string;
@@ -15,6 +17,47 @@ interface GasSyncPayload {
   timestamp: string;
 }
 
+export async function gasRequest(payload: GasSyncPayload, settings: SystemSettings) {
+  if (!settings.GAS_WEB_APP_URL || settings.GAS_WEB_APP_URL.includes('AKfycb...')) {
+    throw new Error('GAS URL chưa được cấu hình.');
+  }
+
+  try {
+    const response = await fetch(settings.GAS_WEB_APP_URL, {
+      method: 'POST',
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'text/plain;charset=utf-8',
+      },
+      body: JSON.stringify(payload)
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const result = await response.json();
+    if (!result.success) {
+      throw new Error(result.message || 'Lỗi từ máy chủ GAS');
+    }
+    return result;
+  } catch (error: any) {
+    console.error('GAS Request Error:', error);
+    throw new Error(error.message || 'Không thể kết nối đến máy chủ GAS');
+  }
+}
+
+export async function loginAdminGas(email: string, password: string, pin: string, settings: SystemSettings) {
+  const payload: GasSyncPayload = {
+    action: 'login_admin',
+    email,
+    password,
+    pin,
+    timestamp: new Date().toISOString()
+  };
+  return await gasRequest(payload, settings);
+}
+
 export async function sendEmailResult(
   email: string, 
   submissionId: string, 
@@ -22,12 +65,8 @@ export async function sendEmailResult(
   results: any,
   settings: SystemSettings
 ) {
-  if (!settings.GAS_WEB_APP_URL || settings.GAS_WEB_APP_URL.includes('AKfycb...')) {
-    return { success: false, message: 'GAS URL not configured' };
-  }
-
   const payload: GasSyncPayload = {
-    action: 'submit_data', // We can reuse submit_data or create a specific one
+    action: 'submit_data',
     email,
     data: {
       type: 'email_result',
@@ -37,67 +76,26 @@ export async function sendEmailResult(
     },
     timestamp: new Date().toISOString()
   };
-
-  try {
-    await fetch(settings.GAS_WEB_APP_URL, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify(payload)
-    });
-    return { success: true };
-  } catch (error) {
-    return { success: false, error };
-  }
+  return await gasRequest(payload, settings);
 }
 
 export async function updateAdminPassword(email: string, newPassword: string, settings: SystemSettings) {
-  if (!settings.GAS_WEB_APP_URL || settings.GAS_WEB_APP_URL.includes('AKfycb...')) {
-    return { success: false, message: 'GAS URL not configured' };
-  }
-
   const payload: GasSyncPayload = {
     action: 'update_password',
     email,
     new_password: newPassword,
     timestamp: new Date().toISOString()
   };
-
-  try {
-    await fetch(settings.GAS_WEB_APP_URL, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify(payload)
-    });
-    return { success: true };
-  } catch (error) {
-    return { success: false, error };
-  }
+  return await gasRequest(payload, settings);
 }
 
 export async function resetAdminPassword(email: string, settings: SystemSettings) {
-  if (!settings.GAS_WEB_APP_URL || settings.GAS_WEB_APP_URL.includes('AKfycb...')) {
-    return { success: false, message: 'GAS URL not configured' };
-  }
-
   const payload: GasSyncPayload = {
     action: 'reset_password',
     email,
     timestamp: new Date().toISOString()
   };
-
-  try {
-    await fetch(settings.GAS_WEB_APP_URL, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify(payload)
-    });
-    return { success: true };
-  } catch (error) {
-    return { success: false, error };
-  }
+  return await gasRequest(payload, settings);
 }
 
 export async function syncFormSchemaWithGas(
@@ -105,12 +103,6 @@ export async function syncFormSchemaWithGas(
   blocks: Block[], 
   settings: SystemSettings
 ) {
-  if (!settings.GAS_WEB_APP_URL || settings.GAS_WEB_APP_URL.includes('AKfycb...')) {
-    console.warn('GAS_WEB_APP_URL chưa được cấu hình chính xác.');
-    return { success: false, message: 'GAS URL not configured' };
-  }
-
-  // 1. Tạo danh sách cột (PLAN)
   const columns = [
     'submission_id',
     'timestamp',
@@ -120,22 +112,17 @@ export async function syncFormSchemaWithGas(
     'user_org',
   ];
 
-  // Thêm các cột dựa trên blocks
   blocks.forEach(block => {
-    if (block.type === 'content') return; // Bỏ qua block nội dung
-
+    if (block.type === 'content') return;
     if (block.type === 'matrix') {
-      // Đối với ma trận: blockCode_rowCode
       block.rows?.forEach(row => {
         columns.push(`${block.code}_${row.code}`);
       });
     } else {
-      // Các loại khác dùng mã câu hỏi trực tiếp
       columns.push(block.code);
     }
   });
 
-  // Thêm cột tổng điểm nếu có tính điểm
   if (form.show_results) {
     columns.push('total_score');
     columns.push('result_interpretation');
@@ -146,29 +133,11 @@ export async function syncFormSchemaWithGas(
     form_id: form.id,
     form_code: form.code,
     plan: {
-      sheet_name: form.code, // Dùng mã bảng hỏi làm tên Sheet
+      sheet_name: form.code,
       columns: columns
     },
     timestamp: new Date().toISOString()
   };
 
-  try {
-    // Sử dụng mode no-cors nếu gặp vấn đề CORS với GAS, 
-    // nhưng khuyến khích GAS trả về header cho phép CORS.
-    const response = await fetch(settings.GAS_WEB_APP_URL, {
-      method: 'POST',
-      mode: 'no-cors', // GAS thường yêu cầu no-cors nếu không cấu hình Options
-      cache: 'no-cache',
-      headers: {
-        'Content-Type': 'text/plain;charset=utf-8',
-      },
-      body: JSON.stringify(payload)
-    });
-
-    // Vì mode no-cors không trả về body, chúng ta giả định thành công nếu không có lỗi ném ra
-    return { success: true, message: 'Schema sync request sent' };
-  } catch (error) {
-    console.error('Lỗi đồng bộ GAS:', error);
-    return { success: false, error };
-  }
+  return await gasRequest(payload, settings);
 }

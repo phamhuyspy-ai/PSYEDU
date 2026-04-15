@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 
 export type BlockType = 'content' | 'contact' | 'single_choice' | 'multi_choice' | 'likert' | 'text' | 'matrix';
 
@@ -116,6 +117,7 @@ interface BuilderState {
   form: FormMeta | null;
   blocks: Block[];
   activeBlockId: string | null;
+  hasHydrated: boolean;
   
   setForms: (forms: FormMeta[]) => void;
   setForm: (form: FormMeta) => void;
@@ -127,50 +129,63 @@ interface BuilderState {
   moveBlock: (id: string, newIndex: number) => void;
   
   setActiveBlock: (id: string | null) => void;
+  setHasHydrated: (state: boolean) => void;
 }
 
-export const useBuilderStore = create<BuilderState>((set) => ({
-  forms: [],
-  form: null,
-  blocks: [],
-  activeBlockId: null,
+export const useBuilderStore = create<BuilderState>()(
+  persist(
+    (set) => ({
+      forms: [],
+      form: null,
+      blocks: [],
+      activeBlockId: null,
+      hasHydrated: false,
 
-  setForms: (forms) => set({ forms }),
-  setForm: (form) => set({ form }),
-  updateFormMeta: (updates) => set((state) => ({ 
-    form: state.form ? { ...state.form, ...updates } : null 
-  })),
+      setForms: (forms) => set({ forms }),
+      setForm: (form) => set({ form }),
+      updateFormMeta: (updates) => set((state) => ({ 
+        form: state.form ? { ...state.form, ...updates } : null 
+      })),
 
-  addBlock: (blockData) => set((state) => {
-    const newBlock: Block = {
-      ...blockData,
-      id: typeof crypto.randomUUID === 'function' ? crypto.randomUUID() : Math.random().toString(36).substring(2, 11),
-      sort_order: state.blocks.length,
-    };
-    return { blocks: [...state.blocks, newBlock], activeBlockId: newBlock.id };
-  }),
+      addBlock: (blockData) => set((state) => {
+        const newBlock: Block = {
+          ...blockData,
+          id: typeof crypto.randomUUID === 'function' ? crypto.randomUUID() : Math.random().toString(36).substring(2, 11),
+          sort_order: state.blocks.length,
+        };
+        return { blocks: [...state.blocks, newBlock], activeBlockId: newBlock.id };
+      }),
 
-  updateBlock: (id, updates) => set((state) => ({
-    blocks: state.blocks.map(b => b.id === id ? { ...b, ...updates } : b)
-  })),
+      updateBlock: (id, updates) => set((state) => ({
+        blocks: state.blocks.map(b => b.id === id ? { ...b, ...updates } : b)
+      })),
 
-  removeBlock: (id) => set((state) => ({
-    blocks: state.blocks.filter(b => b.id !== id),
-    activeBlockId: state.activeBlockId === id ? null : state.activeBlockId
-  })),
+      removeBlock: (id) => set((state) => ({
+        blocks: state.blocks.filter(b => b.id !== id),
+        activeBlockId: state.activeBlockId === id ? null : state.activeBlockId
+      })),
 
-  moveBlock: (id, newIndex) => set((state) => {
-    const blocks = [...state.blocks];
-    const oldIndex = blocks.findIndex(b => b.id === id);
-    if (oldIndex === -1) return state;
-    
-    const [movedBlock] = blocks.splice(oldIndex, 1);
-    blocks.splice(newIndex, 0, movedBlock);
-    
-    // Update sort_order
-    const updatedBlocks = blocks.map((b, index) => ({ ...b, sort_order: index }));
-    return { blocks: updatedBlocks };
-  }),
+      moveBlock: (id, newIndex) => set((state) => {
+        const blocks = [...state.blocks];
+        const oldIndex = blocks.findIndex(b => b.id === id);
+        if (oldIndex === -1) return state;
+        
+        const [movedBlock] = blocks.splice(oldIndex, 1);
+        blocks.splice(newIndex, 0, movedBlock);
+        
+        // Update sort_order
+        const updatedBlocks = blocks.map((b, index) => ({ ...b, sort_order: index }));
+        return { blocks: updatedBlocks };
+      }),
 
-  setActiveBlock: (id) => set({ activeBlockId: id }),
-}));
+      setActiveBlock: (id) => set({ activeBlockId: id }),
+      setHasHydrated: (state) => set({ hasHydrated: state }),
+    }),
+    {
+      name: 'psyedu-builder',
+      onRehydrateStorage: () => (state) => {
+        state?.setHasHydrated(true);
+      },
+    }
+  )
+);

@@ -1,5 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { loginAdminGas } from '../services/gasService';
+import { useSettingsStore } from './settingsStore';
 
 interface User {
   id: string;
@@ -11,9 +13,11 @@ interface User {
 interface AuthState {
   user: User | null;
   isAuthenticated: boolean;
-  login: (email: string, password: string) => Promise<void>;
+  hasHydrated: boolean;
+  login: (email: string, password: string, pin: string) => Promise<void>;
   logout: () => void;
   updateUser: (updates: Partial<User>) => void;
+  setHasHydrated: (state: boolean) => void;
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -21,29 +25,31 @@ export const useAuthStore = create<AuthState>()(
     (set) => ({
       user: null,
       isAuthenticated: false,
-      login: async (email, password) => {
-        // Mock login logic - in real app, this would call GAS
-        if (email === 'phamhuyspy@gmail.com' && password === 'admin123') {
+      hasHydrated: false,
+      login: async (email, password, pin) => {
+        const settings = useSettingsStore.getState().settings;
+        const result = await loginAdminGas(email, password, pin, settings);
+        
+        if (result.success && result.user) {
           set({
-            user: { id: '1', email, name: 'Super Admin', role: 'super_admin' },
-            isAuthenticated: true,
-          });
-        } else if (email === 'manager@psyedu.vn' && password === 'manager123') {
-          set({
-            user: { id: '2', email, name: 'Manager', role: 'manager' },
+            user: result.user,
             isAuthenticated: true,
           });
         } else {
-          throw new Error('Email hoặc mật khẩu không đúng');
+          throw new Error(result.message || 'Đăng nhập thất bại');
         }
       },
       logout: () => set({ user: null, isAuthenticated: false }),
       updateUser: (updates) => set((state) => ({
         user: state.user ? { ...state.user, ...updates } : null
       })),
+      setHasHydrated: (state) => set({ hasHydrated: state }),
     }),
     {
       name: 'psyedu-auth',
+      onRehydrateStorage: () => (state) => {
+        state?.setHasHydrated(true);
+      },
     }
   )
 );
